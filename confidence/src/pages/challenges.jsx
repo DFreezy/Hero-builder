@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 
+//download videos and add to each day
 export default function Challenges() {
   const [challenges, setChallenges] = useState([
-    { id: 1, title: "10 Push-ups in public", unlocked: true, completed: false },
+    { id: 1, title: "10 Push-ups in public", unlocked: true, completed: false, url: "public/The Push-up Social Experiment (masked_mediator) - FitFix (360p, h264, youtube).mp4"},
     { id: 2, title: "Start a conversation with a stranger", unlocked: false, completed: false },
     { id: 3, title: "Give a genuine compliment to someone", unlocked: false, completed: false },
     { id: 4, title: "Go to a bar alone", unlocked: false, completed: false },
@@ -67,7 +68,12 @@ export default function Challenges() {
               {ch.completed && <span className="text-green-600">✅</span>}
               {!ch.unlocked && <span className="text-gray-400"> 🔒</span>}
             </span>
-
+                {ch.url && (
+  <video width="300" height="200" controls className="mx-auto my-4">
+    <source src={ch.url} type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+)}
             {ch.unlocked && !ch.completed && (
               <button
                 className="bg-blue-500 text-white px-4 py-1 rounded"
