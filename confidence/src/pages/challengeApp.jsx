@@ -1,14 +1,7 @@
-import React, { useState } from 'react'
-import './App.css'
-import Navbar from './components/navbar'
-import Records from './pages/records'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Home from './components/home'
-import Contact from './pages/contact'
-import About from './pages/about'
-import Challenges from './pages/challenges' // or your ChallengeApp content
+import React, { useState } from "react";
 
-function App() {
+//download videos and add to each day
+export default function ChallengeApp() {
   const [challenges, setChallenges] = useState([
     { id: 1, title: "10 Push-ups in public", unlocked: true, completed: false, url: "/pushup.mp4"},
     { id: 2, title: "Start a conversation with a stranger", unlocked: false, completed: false, url: "/Talktostranger.mp4" },
@@ -40,36 +33,70 @@ function App() {
     { id: 28, title: "Start a community garden", unlocked: false, completed: false },
     { id: 29, title: "Host a cultural exchange event", unlocked: false, completed: false },
     { id: 30, title: "Plan and lead a group hike", unlocked: false, completed: false },
-    // ...
   ]);
 
   const completeChallenge = (id) => {
-    setChallenges((prev) =>
-      prev.map((ch, index) => {
-        if (ch.id === id) return { ...ch, completed: true };
-        if (prev[index - 1]?.id === id) return { ...ch, unlocked: true };
+    setChallenges((prevChallenges) =>
+      prevChallenges.map((ch, index) => {
+        if (ch.id === id) {
+          return { ...ch, completed: true };
+        }
+        // unlock next challenge
+        if (prevChallenges[index - 1]?.id === id) {
+          return { ...ch, unlocked: true };
+        }
         return ch;
       })
     );
   };
 
-  const completedChallenges = challenges.filter((ch) => ch.completed);
-
   return (
-    <BrowserRouter>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/records" element={<Records completedChallenges={completedChallenges} />} />
-        <Route
-          path="/challengeApp"
-          element={<Challenges challenges={challenges} onComplete={completeChallenge} />}
-        />
-      </Routes>
-    </BrowserRouter>
+    <div>
+      <div className="p-4 text-center text-2xl font-bold bg-amber-200">
+        <h1>Challenges</h1>
+        <p>Complete challenges to earn points and level up!</p>
+      </div>
+
+      <div className="p-4">
+        {challenges.map((ch) => (
+          <div
+            key={ch.id}
+            className="p-4 my-2 border rounded-lg flex justify-between items-center"
+          >
+            <span>
+              {ch.title}{" "}
+              {ch.completed && <span className="text-green-600">✅</span>}
+              {!ch.unlocked && <span className="text-gray-400"> 🔒</span>}
+            </span>
+                {ch.url && (
+  <video width="300" height="200" controls className="mx-auto my-4">
+    <source src={ch.url} type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+)}
+            {ch.unlocked && !ch.completed && (
+              <button
+                className="bg-blue-500 text-white px-4 py-1 rounded"
+                onClick={() => completeChallenge(ch.id)}
+              >
+                Complete
+              </button>
+            )}
+
+            {ch.completed && (
+              <button className="bg-gray-300 text-black px-4 py-1 rounded" disabled>
+                Done
+              </button>
+            )}
+
+            {!ch.unlocked && (
+              <button className="bg-gray-200 text-gray-500 px-4 py-1 rounded" disabled>
+                Locked
+              </button>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
-
-export default App;

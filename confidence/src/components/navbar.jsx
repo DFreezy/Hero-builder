@@ -10,7 +10,7 @@ export default function Navbar() {
     if (dialog) {
       dialog.close(); // close modal
     }
-    navigate('/challenges'); // redirect
+    navigate('/challengeApp'); // redirect
   }
 
   return (
